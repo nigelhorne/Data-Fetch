@@ -21,11 +21,8 @@ WriteMakefile(
     BUILD_REQUIRES => {
 	'Test::Most' => 0,
 	'Test::NoWarnings' => 0,
-	'Test::Script' => 1.12,
 	'Test::CleanNamespaces' => 0,
 	# 'Test::Kwalitee' => 0,
-	'autodie' => 0,
-	'IPC::System::Simple' => 0,
     },
     PREREQ_PM => {
 	'threads' => 0,
