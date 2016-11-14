@@ -76,7 +76,7 @@ sub prime {
 
 =head2 prime
 
-Say get a value you've primed.  Takes two mandatory parameters:
+Retrieve get a value you've primed.  Takes two mandatory parameters:
 
 object - the object you'll be sending the message to
 message - the message you'll be sending
