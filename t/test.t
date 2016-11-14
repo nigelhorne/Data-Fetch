@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 4;
+use Test::Most tests => 7;
 use Test::NoWarnings;
 
 BEGIN {
@@ -15,6 +15,14 @@ FETCH: {
 	$fetch->prime(object => $simple, message => 'get');
 	ok($fetch->get(object => $simple, message => 'get') == 1);
 	ok($fetch->get(object => $simple, message => 'get') == 1);
+
+	$simple = Data::Value->new(2);
+	$fetch = Data::Fetch->new();
+	$fetch->prime(object => $simple, message => 'get');
+	ok($fetch->get(object => $simple, message => 'get') == 2);
+	$fetch->prime(object => $simple, message => 'get');
+	ok($fetch->get(object => $simple, message => 'get') == 2);
+	ok($fetch->get(object => $simple, message => 'get') == 2);
 }
 
 package Data::Value;
