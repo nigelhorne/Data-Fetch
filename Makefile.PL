@@ -1,6 +1,12 @@
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
+use Config;
+
+unless($Config{usethreads}) {
+	print STDERR "NA: Perl not compiled with thread support\n";
+	exit(0);
+}
 
 WriteMakefile(
     NAME		=> 'Data::Fetch',

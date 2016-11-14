@@ -74,7 +74,7 @@ sub prime {
 	});
 }
 
-=head2 prime
+=head2 get
 
 Retrieve get a value you've primed.  Takes two mandatory parameters:
 
