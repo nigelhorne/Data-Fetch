@@ -112,6 +112,12 @@ Nigel Horne, C<< <njh at bandsman.co.uk> >>
 
 Can't give arguments to the message.
 
+Changing a value between prime and get will not necessarily get you the data you want. That's the way it works
+and isn't going to change.
+
+If you change a value between two calls of get(), the earlier value is always used.  This is definatly a feature
+not a bug.
+
 Please report any bugs or feature requests to C<bug-data-fetch at rt.cpan.org>,
 or through the web interface at
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Data-Fetch>.
