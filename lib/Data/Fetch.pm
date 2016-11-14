@@ -21,6 +21,7 @@ our $VERSION = '0.01';
 Sometimes we know in advance that we'll be needing a value which is going to take a long time to compute or determine.
 This module fetches the value in the background so that you don't need to wait so long when you need the value
 
+    use CalculatePi;
     use Data::Fetch;
     my $fetcher = Data::Fetch->new();
     my $object = CalculatePi->new(places => 1000000);
@@ -115,7 +116,7 @@ Can't give arguments to the message.
 Changing a value between prime and get will not necessarily get you the data you want. That's the way it works
 and isn't going to change.
 
-If you change a value between two calls of get(), the earlier value is always used.  This is definatly a feature
+If you change a value between two calls of get(), the earlier value is always used.  This is definitely a feature
 not a bug.
 
 Please report any bugs or feature requests to C<bug-data-fetch at rt.cpan.org>,
