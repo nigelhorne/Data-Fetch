@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 9;
+use Test::Most tests => 11;
 use Test::NoWarnings;
 
 BEGIN {
@@ -23,6 +23,9 @@ FETCH: {
 	$fetch->prime(object => $simple, message => 'get');
 	ok($fetch->get(object => $simple, message => 'get') == 2);
 	ok($fetch->get(object => $simple, message => 'get') == 2);
+	$simple->set(22);
+	ok($simple->get() == 22);
+	ok($fetch->get(object => $simple, message => 'get') == 2);	# Values are "cached"
 
 	$simple = Data::Value->new(3);
 	$fetch->prime(object => $simple, message => 'get', arg => 'prefix');
@@ -50,5 +53,13 @@ sub get {
 	}
 	return $self->{value};
 }
+
+sub set {
+	my $self = shift;
+	my $arg = shift;
+
+	$self->{value} = $arg;
+}
+
 
 1;

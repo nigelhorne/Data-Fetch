@@ -26,7 +26,7 @@ t/prereq.t
 t/snippets.t
 t/spelling.t
 t/strict.t
-t/test.t
+t/fetch.t
 t/unused.t
 t/used.t
 t/vars.t
