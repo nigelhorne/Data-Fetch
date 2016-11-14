@@ -49,10 +49,14 @@ sub new {
 
 =head2 prime
 
-Say what is is you'll be needing later.  Takes two mandatory parameters:
+Say what is is you'll be needing later.
+Takes two mandatory parameters:
 
     object - the object you'll be sending the message to
     message - the message you'll be sending
+
+Takes one mandatory parameter:
+    arg - passes this argument to the message
 
 =cut
 
@@ -70,7 +74,11 @@ sub prime {
 	$self->{values}->{$object}->{thread} = threads->create(sub {
 		my $o = $args{'object'};
 		my $m = $args{'message'};
-		$self->{values}->{$object}->{value} = eval '$o->$m()';
+		if(my $a = $args{'arg'}) {
+			$self->{values}->{$object}->{value} = eval '$o->$m($a)';
+		} else {
+			$self->{values}->{$object}->{value} = eval '$o->$m()';
+		}
 		die $@ if $@;
 		return $self->{values}->{$object}->{value};
 	});
@@ -112,7 +120,7 @@ Nigel Horne, C<< <njh at bandsman.co.uk> >>
 
 =head1 BUGS
 
-Can't give arguments to the message.
+Can't pass more than one argument to the message
 
 Changing a value between prime and get will not necessarily get you the data you want. That's the way it works
 and isn't going to change.

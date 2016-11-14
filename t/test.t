@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 7;
+use Test::Most tests => 8;
 use Test::NoWarnings;
 
 BEGIN {
@@ -23,6 +23,10 @@ FETCH: {
 	$fetch->prime(object => $simple, message => 'get');
 	ok($fetch->get(object => $simple, message => 'get') == 2);
 	ok($fetch->get(object => $simple, message => 'get') == 2);
+
+	$simple = Data::Value->new(3);
+	$fetch->prime(object => $simple, message => 'get', arg => 'prefix');
+	ok($fetch->get(object => $simple, message => 'get', arg => 'prefix') eq 'prefix: 3');
 }
 
 package Data::Value;
@@ -38,6 +42,11 @@ sub new {
 
 sub get {
 	my $self = shift;
+	my $arg = shift;
+
+	if($arg) {
+		return "$arg: $self->{value}";
+	}
 	return $self->{value};
 }
 
