@@ -10,11 +10,11 @@ Data::Fetch - give advance warning that you'll be needing a value
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
@@ -24,10 +24,10 @@ This module fetches the value in the background so that you don't need to wait s
     use CalculatePi;
     use Data::Fetch;
     my $fetcher = Data::Fetch->new();
-    my $object = CalculatePi->new(places => 1000000);
-    $fetcher->prime(object => $object, message => get);
+    my $pi = CalculatePi->new(places => 1000000);
+    $fetcher->prime(object => $pi, message => 'as_string');	# Warn we'll run $pi->as_string() in the future
     # Do other things
-    print $fetcher->get(object => $object, message => get), "\n";
+    print $fetcher->get(object => $pi, message => 'as_string'), "\n";	# Runs $pi->as_string()
 
 =head1 SUBROUTINES/METHODS
 
