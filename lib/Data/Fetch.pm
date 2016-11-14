@@ -1,5 +1,6 @@
 package Data::Fetch;
 
+use 5.12.0;	# Threads before that are apparently not good
 use strict;
 use warnings;
 use threads;
