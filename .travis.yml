@@ -4,7 +4,7 @@ os:
   # - osx
 
 perl:
-  - "5.22-thr"
+  - "5.22-extras"
   - "5.20-thr"
   - "5.18-thr"
   - "5.16-thr"
