@@ -19,7 +19,7 @@ our $VERSION = '0.01';
 =head1 SYNOPSIS
 
 Sometimes we know in advance that we'll be needing a value which is going to take a long time to compute or determine.
-This module fetches the value in the background so that you don't need to wait so long when you need the value
+This module fetches the value in the background so that you don't need to wait so long when you need the value.
 
     use CalculatePi;
     use Data::Fetch;
@@ -50,8 +50,8 @@ sub new {
 
 Say what is is you'll be needing later.  Takes two mandatory parameters:
 
-object - the object you'll be sending the message to
-message - the message you'll be sending
+    object - the object you'll be sending the message to
+    message - the message you'll be sending
 
 =cut
 
@@ -81,8 +81,8 @@ sub prime {
 
 Retrieve get a value you've primed.  Takes two mandatory parameters:
 
-object - the object you'll be sending the message to
-message - the message you'll be sending
+    object - the object you'll be sending the message to
+    message - the message you'll be sending
 
 =cut
 
@@ -132,7 +132,6 @@ automatically be notified of progress on your bug as I make changes.
 You can find documentation for this module with the perldoc command.
 
     perldoc Data::Fetch
-
 
 You can also look for information at:
 
