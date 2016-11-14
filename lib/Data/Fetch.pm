@@ -63,7 +63,7 @@ sub prime {
 	my $object = $args{'object'} . '->' . $args{'message'};
 
 	if($self->{values}->{$object}) {
-		return;
+		return $self;
 	}
 	$self->{values}->{$object}->{thread} = threads->create(sub {
 		my $o = $args{'object'};
@@ -72,6 +72,8 @@ sub prime {
 		die $@ if $@;
 		return $self->{values}->{$object}->{value};
 	});
+
+	return $self;	# Easily prime lots of values in one call
 }
 
 =head2 get
