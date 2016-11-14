@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 8;
+use Test::Most tests => 9;
 use Test::NoWarnings;
 
 BEGIN {
@@ -27,6 +27,7 @@ FETCH: {
 	$simple = Data::Value->new(3);
 	$fetch->prime(object => $simple, message => 'get', arg => 'prefix');
 	ok($fetch->get(object => $simple, message => 'get', arg => 'prefix') eq 'prefix: 3');
+	ok($fetch->get(object => $simple, message => 'get') eq 'prefix: 3');
 }
 
 package Data::Value;
