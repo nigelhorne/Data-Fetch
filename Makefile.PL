@@ -1,0 +1,40 @@
+use strict;
+use warnings;
+use ExtUtils::MakeMaker;
+
+WriteMakefile(
+    NAME		=> 'Data::Fetch',
+    AUTHOR		=> q{Nigel Horne <njh@bandsman.co.uk>},
+    VERSION_FROM	=> 'lib/Data/Fetch.pm',
+    ABSTRACT_FROM       => 'lib/Data/Fetch.pm',
+    ((defined($ExtUtils::MakeMaker::VERSION) &&
+     ($ExtUtils::MakeMaker::VERSION >= 6.3002))
+      ? ('LICENSE'=> 'GPL')
+      : ()),
+    PL_FILES	=> {},
+    BUILD_REQUIRES => {
+	'Test::Most' => 0,
+	'Test::NoWarnings' => 0,
+	'Test::Script' => 1.12,
+	'Test::CleanNamespaces' => 0,
+	# 'Test::Kwalitee' => 0,
+	'autodie' => 0,
+	'IPC::System::Simple' => 0,
+    },
+    PREREQ_PM => {
+	'threads' => 0,
+    },
+    dist		=> { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+    clean		=> { FILES => 'Data-Fetch-*' },
+    META_MERGE		=> {
+    	'meta-spec' => { version => 2 },
+    	resources => {
+    		repository => {
+			type => 'git',
+			url => 'git://github.com/nigelhorne/Data-Fetch.git',
+			web => 'https://github.com/nigelhorne/Data-Fetch',
+    		},
+	},
+    },
+    MIN_PERL_VERSION	=> '5.6.2'	# Probably would work, but never tested on earlier versions than this
+);
