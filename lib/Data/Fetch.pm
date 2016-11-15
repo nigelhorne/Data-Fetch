@@ -114,6 +114,23 @@ sub get {
 	die "Need to prime before getting";
 }
 
+sub DESTROY {
+	if(defined($^V) && ($^V ge 'v5.14.0')) {
+		return if ${^GLOBAL_PHASE} eq 'DESTRUCT';	# >= 5.14.0 only
+	}
+	my $self = shift;
+
+	return unless($self->{values});
+
+	foreach my $o(values $self->{values}) {
+		if($o->{thread}) {
+			$o->{thread}->detach();
+			delete $o->{thread};
+			delete $o->{value};
+		}
+	}
+}
+
 =head1 AUTHOR
 
 Nigel Horne, C<< <njh at bandsman.co.uk> >>
