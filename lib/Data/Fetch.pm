@@ -1,5 +1,15 @@
 package Data::Fetch;
 
+# Author Nigel Horne: njh@bandsman.co.uk
+# Copyright (C) 2016, Nigel Horne
+
+# Usage is subject to licence terms.
+# The licence terms of this software are as follows:
+# Personal single user, single computer use: GPL2
+# All other users (including Commercial, Charity, Educational, Government)
+#	must apply in writing for a licence for use from Nigel Horne at the
+#	above e-mail.
+
 # use 5.12.0;	# Threads before that are apparently not good
 use 5.10.0;	# Earliest version that Coro works with
 use strict;
@@ -13,11 +23,11 @@ Data::Fetch - give advance warning that you'll be needing a value
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 SYNOPSIS
 
@@ -70,8 +80,8 @@ sub prime {
 	return unless($args{'object'} && $args{'message'});
 
 	my $object = $args{'object'} . '->' . $args{'message'};
-	if($args{arg}) {
-		$object .= "($args{arg})"
+	if(my $a = $args{arg}) {
+		$object .= "($a)"
 	}
 
 	if($self->{values} && $self->{values}->{$object} && $self->{values}->{$object}->{status}) {
@@ -119,8 +129,8 @@ sub get {
 	return unless($args{'object'} && $args{'message'});
 
 	my $object = $args{'object'} . '->' . $args{'message'};
-	if($args{arg}) {
-		$object .= "($args{arg})"
+	if(my $a = $args{arg}) {
+		$object .= "($a)"
 	}
 
 	if(!defined($self->{values}->{$object}->{status})) {
