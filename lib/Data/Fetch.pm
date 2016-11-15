@@ -44,7 +44,7 @@ sub new {
 
 	return unless(defined($class));
 
-	return bless { values => {} }, $class;
+	return bless { }, $class;
 }
 
 =head2 prime
@@ -74,15 +74,11 @@ sub prime {
 	$self->{values}->{$object}->{thread} = threads->create(sub {
 		my $o = shift;
 		my $m = shift;
-		my $rc;
-		if(my $a = $args{'arg'}) {
-			$rc = eval '$o->$m($a)';
-		} else {
-			$rc = eval '$o->$m()';
+		if(my $a = shift) {
+			return eval '$o->$m($a)';
 		}
-		die $@ if $@;
-		return $rc;
-	}, $args{'object'}, $args{'message'});
+		return eval '$o->$m()';
+	}, $args{'object'}, $args{'message'}, $args{'arg'});
 
 	return $self;	# Easily prime lots of values in one call
 }
@@ -123,7 +119,7 @@ sub DESTROY {
 
 	return unless($self->{values});
 
-	foreach my $o(values $self->{values}) {
+	foreach my $o(values %{$self->{values}}) {
 		if($o->{thread}) {
 			$o->{thread}->detach();
 			delete $o->{thread};
