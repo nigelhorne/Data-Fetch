@@ -42,5 +42,6 @@ WriteMakefile(
     		},
 	},
     },
-    MIN_PERL_VERSION	=> '5.12.0'	# Get decent thread support
+    # MIN_PERL_VERSION	=> '5.12.0'	# Get decent thread support
+    MIN_PERL_VERSION	=> '5.10.0'	# Coro support
 );

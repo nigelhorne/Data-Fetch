@@ -1,6 +1,7 @@
 package Data::Fetch;
 
 # use 5.12.0;	# Threads before that are apparently not good
+use 5.10.0;	# Earliest version that Coro works with
 use strict;
 use warnings;
 use Coro;
@@ -12,11 +13,11 @@ Data::Fetch - give advance warning that you'll be needing a value
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 SYNOPSIS
 

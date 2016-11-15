@@ -4,11 +4,11 @@
 
 # Data::Fetch
 
-give advance warning that you'll be needing a value
+Give advance warning that you'll be needing a value
 
 # VERSION
 
-Version 0.01
+Version 0.03
 
 # SYNOPSIS
 
@@ -31,10 +31,14 @@ Creates a Data::Fetch object.  Takes no argument.
 
 ## prime
 
-Say what is is you'll be needing later.  Takes two mandatory parameters:
+Say what is is you'll be needing later.
+Takes two mandatory parameters:
 
     object - the object you'll be sending the message to
     message - the message you'll be sending
+
+Takes one mandatory parameter:
+    arg - passes this argument to the message
 
 ## get
 
@@ -49,7 +53,7 @@ Nigel Horne, `<njh at bandsman.co.uk>`
 
 # BUGS
 
-Can't give arguments to the message.
+Can't pass more than one argument to the message
 
 Changing a value between prime and get will not necessarily get you the data you want. That's the way it works
 and isn't going to change.
