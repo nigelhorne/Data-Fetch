@@ -1,3 +1,7 @@
+[![Linux Build Status](https://travis-ci.org/nigelhorne/Data-Fetch.svg?branch=master)](https://travis-ci.org/nigelhorne/Data-Fetch)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/uexrsduxn2yk58on/branch/master?svg=true)](https://ci.appveyor.com/project/nigelhorne/data-fetch/branch/master)
+[![Dependency Status](https://dependencyci.com/github/nigelhorne/Data-Fetch/badge)](https://dependencyci.com/github/nigelhorne/Data-Fetch)
+
 # Data::Fetch
 
 give advance warning that you'll be needing a value

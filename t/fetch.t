@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 17;
+use Test::Most tests => 19;
 use Test::NoWarnings;
 
 BEGIN {
@@ -42,6 +42,13 @@ FETCH: {
 	$simple->set(55);
 	$fetch->prime(object => $simple, message => 'get');
 	ok($fetch->get(object => $simple, message => 'get') == 55);
+
+	$fetch = new_ok('Data::Fetch');
+	$simple = Data::Value->new(6);
+	eval {
+		$fetch->get(object => $simple, message => 'get');
+	};
+	ok($@ =~ /Need to prime before getting/);
 }
 
 package Data::Value;
