@@ -1,9 +1,10 @@
 Revision history for Data::Fetch
 
-0.02
+0.02	Mon Nov 14 22:16:47 EST 2016
 	Specify minimum version of Perl for good thread support
 	Allow an argument to be passed to the message
 	Tidy up fetch() without get() to avoid thread leaks
+	Correct argument call to thread->create
 
 0.01	Mon Nov 14 14:29:08 EST 2016
         First draft
