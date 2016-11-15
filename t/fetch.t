@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 19;
+use Test::Most tests => 16;
 use Test::NoWarnings;
 
 BEGIN {
@@ -17,7 +17,6 @@ FETCH: {
 	ok($fetch->get(object => $simple, message => 'get') == 1);
 
 	$simple = Data::Value->new(2);
-	$fetch = new_ok('Data::Fetch');
 	$fetch->prime(object => $simple, message => 'get');
 	ok($fetch->get(object => $simple, message => 'get') == 2);
 	$fetch->prime(object => $simple, message => 'get');
@@ -27,28 +26,30 @@ FETCH: {
 	ok($simple->get() == 22);
 	ok($fetch->get(object => $simple, message => 'get') == 2);	# Values are "cached"
 
-	$fetch = new_ok('Data::Fetch');
 	$simple = Data::Value->new(3);
 	$fetch->prime(object => $simple, message => 'get', arg => 'prefix');
 	ok($fetch->get(object => $simple, message => 'get', arg => 'prefix') eq 'prefix: 3');
 	ok($fetch->get(object => $simple, message => 'get') eq 'prefix: 3');
 
-	$fetch = new_ok('Data::Fetch');
 	$simple = Data::Value->new(4);
 	$fetch->prime(object => $simple, message => 'get', arg => 'prefix');
 
-	$fetch = new_ok('Data::Fetch');
 	$simple = Data::Value->new(5);
 	$simple->set(55);
 	$fetch->prime(object => $simple, message => 'get');
 	ok($fetch->get(object => $simple, message => 'get') == 55);
 
-	$fetch = new_ok('Data::Fetch');
 	$simple = Data::Value->new(6);
 	eval {
 		$fetch->get(object => $simple, message => 'get');
 	};
 	ok($@ =~ /Need to prime before getting/);
+
+	# Test routines that return undef
+	$simple = Data::Value->new();
+	$fetch->prime(object => $simple, message => 'get');
+	ok(!defined($fetch->get(object => $simple, message => 'get')));
+	ok(!defined($fetch->get(object => $simple, message => 'get')));
 }
 
 package Data::Value;
@@ -59,7 +60,10 @@ sub new {
 
 	return unless(defined($class));
 
-	return bless { value => shift }, $class;
+	if(my $value = shift) {
+		return bless { value => $value }, $class;
+	}
+	return bless { }, $class;
 }
 
 sub get {
@@ -78,6 +82,5 @@ sub set {
 
 	$self->{value} = $arg;
 }
-
 
 1;

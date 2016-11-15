@@ -82,6 +82,7 @@ sub prime {
 		# return eval '$o->$m()';
 	# }, $args{'object'}, $args{'message'}, $args{'arg'});
 
+	$self->{values}->{$object}->{status} = 'running';
 	$self->{values}->{$object}->{thread} = async {
 		my $o = $args{object};
 		my $m = $args{message};
@@ -111,16 +112,20 @@ sub get {
 
 	my $object = $args{'object'} . '->' . $args{'message'};
 
-	if($self->{values}->{$object}->{value}) {
+	if(!defined($self->{values}->{$object}->{status})) {
+		die "Need to prime before getting";
+	}
+	if($self->{values}->{$object}->{status} eq 'complete') {
 		return $self->{values}->{$object}->{value};
 	}
-	if($self->{values}->{$object}->{thread}) {
+	if($self->{values}->{$object}->{status} eq 'running') {
 		my $rc = $self->{values}->{$object}->{thread}->join();
+		$self->{values}->{$object}->{status} = 'complete';
 		delete $self->{values}->{$object}->{thread};
 		# $self->{values}->{$object}->{thread} = undef;	# ????
 		return $self->{values}->{$object}->{value} = $rc;
 	}
-	die "Need to prime before getting";
+	die 'Unknown status: ', $self->{values}->{$object}->{status};
 }
 
 sub DESTROY {
