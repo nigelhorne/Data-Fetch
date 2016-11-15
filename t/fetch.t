@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 11;
+use Test::Most tests => 17;
 use Test::NoWarnings;
 
 BEGIN {
@@ -11,13 +11,13 @@ BEGIN {
 
 FETCH: {
 	my $simple = Data::Value->new(1);
-	my $fetch = Data::Fetch->new();
+	my $fetch = new_ok('Data::Fetch');
 	$fetch->prime(object => $simple, message => 'get');
 	ok($fetch->get(object => $simple, message => 'get') == 1);
 	ok($fetch->get(object => $simple, message => 'get') == 1);
 
 	$simple = Data::Value->new(2);
-	$fetch = Data::Fetch->new();
+	$fetch = new_ok('Data::Fetch');
 	$fetch->prime(object => $simple, message => 'get');
 	ok($fetch->get(object => $simple, message => 'get') == 2);
 	$fetch->prime(object => $simple, message => 'get');
@@ -27,13 +27,21 @@ FETCH: {
 	ok($simple->get() == 22);
 	ok($fetch->get(object => $simple, message => 'get') == 2);	# Values are "cached"
 
+	$fetch = new_ok('Data::Fetch');
 	$simple = Data::Value->new(3);
 	$fetch->prime(object => $simple, message => 'get', arg => 'prefix');
 	ok($fetch->get(object => $simple, message => 'get', arg => 'prefix') eq 'prefix: 3');
 	ok($fetch->get(object => $simple, message => 'get') eq 'prefix: 3');
 
+	$fetch = new_ok('Data::Fetch');
 	$simple = Data::Value->new(4);
 	$fetch->prime(object => $simple, message => 'get', arg => 'prefix');
+
+	$fetch = new_ok('Data::Fetch');
+	$simple = Data::Value->new(5);
+	$simple->set(55);
+	$fetch->prime(object => $simple, message => 'get');
+	ok($fetch->get(object => $simple, message => 'get') == 55);
 }
 
 package Data::Value;

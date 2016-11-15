@@ -106,6 +106,7 @@ sub get {
 	if($self->{values}->{$object}->{thread}) {
 		my $rc = $self->{values}->{$object}->{thread}->join();
 		delete $self->{values}->{$object}->{thread};
+		$self->{values}->{$object}->{thread} = undef;	# ????
 		return $self->{values}->{$object}->{value} = $rc;
 	}
 	die "Need to prime before getting";
