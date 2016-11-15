@@ -4,9 +4,9 @@ os:
   # - osx
 
 perl:
-  - "5.22-extras"
-  - "5.20-extras"
-  - "5.18-extras"
+  # - "5.22"	# Coro is broken on this - but Coro is still better than threads
+  - "5.20"
+  - "5.18"
   - "5.16"
   - "5.14"
   # - "5.12"
@@ -16,6 +16,4 @@ install:
   - cpanm -v --installdeps --notest .
 
 script:
-  # Devel::Cover doesn't support threads (try cover -test)
-  # perl Makefile.PL && make && cover -test -report coveralls
-  perl Makefile.PL && make && make test
+  perl Makefile.PL && make && cover -test -report coveralls

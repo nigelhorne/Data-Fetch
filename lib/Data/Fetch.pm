@@ -1,9 +1,10 @@
 package Data::Fetch;
 
-use 5.12.0;	# Threads before that are apparently not good
+# use 5.12.0;	# Threads before that are apparently not good
 use strict;
 use warnings;
 use Coro;
+# use threads;
 
 =head1 NAME
 
@@ -71,6 +72,15 @@ sub prime {
 	if($self->{values}->{$object}) {
 		return $self;
 	}
+	# $self->{values}->{$object}->{thread} = threads->create(sub {
+		# my $o = shift;
+		# my $m = shift;
+		# if(my $a = shift) {
+			# return eval '$o->$m($a)';
+		# }
+		# return eval '$o->$m()';
+	# }, $args{'object'}, $args{'message'}, $args{'arg'});
+
 	$self->{values}->{$object}->{thread} = async {
 		my $o = $args{object};
 		my $m = $args{message};
@@ -106,7 +116,7 @@ sub get {
 	if($self->{values}->{$object}->{thread}) {
 		my $rc = $self->{values}->{$object}->{thread}->join();
 		delete $self->{values}->{$object}->{thread};
-		$self->{values}->{$object}->{thread} = undef;	# ????
+		# $self->{values}->{$object}->{thread} = undef;	# ????
 		return $self->{values}->{$object}->{value} = $rc;
 	}
 	die "Need to prime before getting";
