@@ -58,6 +58,7 @@ Takes two mandatory parameters:
     message - the message you'll be sending
 
 Takes one optional parameter:
+
     arg - passes this argument to the message
 
 =cut
@@ -106,6 +107,7 @@ Retrieve get a value you've primed.  Takes two mandatory parameters:
     message - the message you'll be sending
 
 Takes one optional parameter:
+
     arg - passes this argument to the message
 
 =cut
