@@ -37,7 +37,7 @@ Takes two mandatory parameters:
     object - the object you'll be sending the message to
     message - the message you'll be sending
 
-Takes one mandatory parameter:
+Takes one optional parameter:
     arg - passes this argument to the message
 
 ## get
@@ -47,13 +47,18 @@ Retrieve get a value you've primed.  Takes two mandatory parameters:
     object - the object you'll be sending the message to
     message - the message you'll be sending
 
+Takes one optional parameter:
+    arg - passes this argument to the message
+
 # AUTHOR
 
 Nigel Horne, `<njh at bandsman.co.uk>`
 
 # BUGS
 
-Can't pass more than one argument to the message
+Can't pass more than one argument to the message.
+
+I would not advise using this to call messages that change values in the object.
 
 Changing a value between prime and get will not necessarily get you the data you want. That's the way it works
 and isn't going to change.

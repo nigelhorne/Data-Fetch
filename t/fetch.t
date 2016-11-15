@@ -29,7 +29,7 @@ FETCH: {
 	$simple = Data::Value->new(3);
 	$fetch->prime(object => $simple, message => 'get', arg => 'prefix');
 	ok($fetch->get(object => $simple, message => 'get', arg => 'prefix') eq 'prefix: 3');
-	ok($fetch->get(object => $simple, message => 'get') eq 'prefix: 3');
+	ok($fetch->get(object => $simple, message => 'get', arg => 'prefix') eq 'prefix: 3');
 
 	$simple = Data::Value->new(4);
 	$fetch->prime(object => $simple, message => 'get', arg => 'prefix');

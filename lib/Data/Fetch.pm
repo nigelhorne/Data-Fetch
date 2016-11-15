@@ -57,7 +57,7 @@ Takes two mandatory parameters:
     object - the object you'll be sending the message to
     message - the message you'll be sending
 
-Takes one mandatory parameter:
+Takes one optional parameter:
     arg - passes this argument to the message
 
 =cut
@@ -69,8 +69,11 @@ sub prime {
 	return unless($args{'object'} && $args{'message'});
 
 	my $object = $args{'object'} . '->' . $args{'message'};
+	if($args{arg}) {
+		$object .= "($args{arg})"
+	}
 
-	if($self->{values}->{$object}) {
+	if($self->{values} && $self->{values}->{$object} && $self->{values}->{$object}->{status}) {
 		return $self;
 	}
 	# $self->{values}->{$object}->{thread} = threads->create(sub {
@@ -102,6 +105,9 @@ Retrieve get a value you've primed.  Takes two mandatory parameters:
     object - the object you'll be sending the message to
     message - the message you'll be sending
 
+Takes one optional parameter:
+    arg - passes this argument to the message
+
 =cut
 
 sub get {
@@ -111,9 +117,13 @@ sub get {
 	return unless($args{'object'} && $args{'message'});
 
 	my $object = $args{'object'} . '->' . $args{'message'};
+	if($args{arg}) {
+		$object .= "($args{arg})"
+	}
 
 	if(!defined($self->{values}->{$object}->{status})) {
-		die "Need to prime before getting";
+		my @call_details = caller(0);
+		die "Need to prime before getting at line ", $call_details[2], ' of ', $call_details[1];
 	}
 	if($self->{values}->{$object}->{status} eq 'complete') {
 		return $self->{values}->{$object}->{value};
@@ -151,7 +161,9 @@ Nigel Horne, C<< <njh at bandsman.co.uk> >>
 
 =head1 BUGS
 
-Can't pass more than one argument to the message
+Can't pass more than one argument to the message.
+
+I would not advise using this to call messages that change values in the object.
 
 Changing a value between prime and get will not necessarily get you the data you want. That's the way it works
 and isn't going to change.

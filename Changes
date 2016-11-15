@@ -2,6 +2,7 @@ Revision history for Data::Fetch
 
 0.04
 	Improved handling of routines that return undef
+	Ensure different values of prefix don't trash each other
 
 0.03	Tue Nov 15 10:17:45 EST 2016
 	Fix values call in DESTROY
