@@ -3,7 +3,7 @@ package Data::Fetch;
 use 5.12.0;	# Threads before that are apparently not good
 use strict;
 use warnings;
-use threads;
+use Coro;
 
 =head1 NAME
 
@@ -71,14 +71,14 @@ sub prime {
 	if($self->{values}->{$object}) {
 		return $self;
 	}
-	$self->{values}->{$object}->{thread} = threads->create(sub {
-		my $o = shift;
-		my $m = shift;
-		if(my $a = shift) {
+	$self->{values}->{$object}->{thread} = async {
+		my $o = $args{object};
+		my $m = $args{message};
+		if(my $a = $args{arg}) {
 			return eval '$o->$m($a)';
 		}
 		return eval '$o->$m()';
-	}, $args{'object'}, $args{'message'}, $args{'arg'});
+	};
 
 	return $self;	# Easily prime lots of values in one call
 }
@@ -122,7 +122,7 @@ sub DESTROY {
 
 	foreach my $o(values %{$self->{values}}) {
 		if($o->{thread}) {
-			$o->{thread}->detach();
+			# $o->{thread}->detach();
 			delete $o->{thread};
 			delete $o->{value};
 		}

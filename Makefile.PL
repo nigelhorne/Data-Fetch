@@ -4,12 +4,12 @@ use warnings;
 no lib '.';
 
 use ExtUtils::MakeMaker;
-use Config;
+# use Config;
 
-unless($Config{usethreads}) {
-	print STDERR "NA: Perl not compiled with thread support\n";
-	exit(0);
-}
+# unless($Config{usethreads}) {
+	# print STDERR "NA: Perl not compiled with thread support\n";
+	# exit(0);
+# }
 
 WriteMakefile(
     NAME		=> 'Data::Fetch',
@@ -28,7 +28,7 @@ WriteMakefile(
 	# 'Test::Kwalitee' => 0,
     },
     PREREQ_PM => {
-	'threads' => 0,
+	'Coro' => 0,
     },
     dist		=> { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean		=> { FILES => 'Data-Fetch-*' },

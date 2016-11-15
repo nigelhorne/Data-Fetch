@@ -3,6 +3,7 @@ Revision history for Data::Fetch
 0.03
 	Fix values call in DESTROY
 	Correctly pass arg to thread
+	Use Coro instead of threads
 
 0.02	Mon Nov 14 22:16:47 EST 2016
 	Specify minimum version of Perl for good thread support
