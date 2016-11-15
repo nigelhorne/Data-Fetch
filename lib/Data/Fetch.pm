@@ -87,16 +87,15 @@ sub prime {
 	if($self->{values} && $self->{values}->{$object} && $self->{values}->{$object}->{status}) {
 		return $self;
 	}
+
 	# $self->{values}->{$object}->{thread} = threads->create(sub {
-		# my $o = shift;
-		# my $m = shift;
-		# if(my $a = shift) {
+		# my ($o, $m, $a) = @_;
+		# if($a) {
 			# return eval '$o->$m($a)';
 		# }
 		# return eval '$o->$m()';
-	# }, $args{'object'}, $args{'message'}, $args{'arg'});
+	# }, ($args{object}, $args{message}, $args{arg}));
 
-	$self->{values}->{$object}->{status} = 'running';
 	$self->{values}->{$object}->{thread} = async {
 		my $o = $args{object};
 		my $m = $args{message};
@@ -106,6 +105,7 @@ sub prime {
 		return eval '$o->$m()';
 	};
 
+	$self->{values}->{$object}->{status} = 'running';
 	return $self;	# Easily prime lots of values in one call
 }
 
@@ -160,7 +160,9 @@ sub DESTROY {
 
 	foreach my $o(values %{$self->{values}}) {
 		if($o->{thread}) {
-			# $o->{thread}->detach();
+			# if($o->{thread}->is_running()) {
+				# $o->{thread}->detach();
+			# }
 			delete $o->{thread};
 			delete $o->{value};
 		}

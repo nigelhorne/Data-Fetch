@@ -29,6 +29,7 @@ WriteMakefile(
     },
     PREREQ_PM => {
 	'Coro' => 0,
+	# 'threads' => 0,
     },
     dist		=> { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean		=> { FILES => 'Data-Fetch-*' },
