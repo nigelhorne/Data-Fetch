@@ -175,6 +175,8 @@ Nigel Horne, C<< <njh at bandsman.co.uk> >>
 
 =head1 BUGS
 
+ARRAY contexts not supported.
+
 Can't pass more than one argument to the message.
 
 I would not advise using this to call messages that change values in the object.

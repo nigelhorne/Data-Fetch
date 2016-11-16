@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 16;
+use Test::Most tests => 19;
 use Test::NoWarnings;
 
 BEGIN {
@@ -45,6 +45,22 @@ FETCH: {
 	};
 	ok($@ =~ /Need to prime before getting/);
 
+	# Test returning a list ref.  Note that returning an array isn't yet supported
+	my @in = (7, 8);
+	$simple = Data::Value->new(\@in);
+	$fetch->prime(object => $simple, message => 'get');
+	my @res = @{$fetch->get(object => $simple, message => 'get')};
+	ok(scalar(@res) == 2);
+	ok($res[0] == 7);
+	ok($res[1] == 8);
+
+	# $simple = Array::Value->new();
+	# $fetch->prime(object => $simple, message => 'get');
+	# @res = $fetch->get(object => $simple, message => 'get');
+	# ok(scalar(@res) == 2);
+	# ok($res[0] == 7);
+	# ok($res[1] == 8);
+
 	# Test routines that return undef
 	$simple = Data::Value->new();
 	$fetch->prime(object => $simple, message => 'get');
@@ -83,4 +99,23 @@ sub set {
 	$self->{value} = $arg;
 }
 
+1;
+
+# package Array::Value;
+# 
+# sub new {
+	# my $proto = shift;
+	# my $class = ref($proto) || $proto;
+# 
+	# return unless(defined($class));
+# 
+	# return bless { }, $class;
+# }
+# 
+# sub get {
+	# my $self = shift;
+# 
+	# return('a', 'b');
+# }
+# 
 1;
