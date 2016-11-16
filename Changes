@@ -1,6 +1,9 @@
 Revision history for Data::Fetch
 
-0.04
+0.05
+	Return value even when not primed
+
+0.04	Tue, 15 Nov 2016 18:42:11 GMT
 	Improved handling of routines that return undef
 	Ensure different values of prefix don't trash each other
 

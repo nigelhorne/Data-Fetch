@@ -10,11 +10,9 @@ package Data::Fetch;
 #	must apply in writing for a licence for use from Nigel Horne at the
 #	above e-mail.
 
-# use 5.12.0;	# Threads before that are apparently not good
-use 5.10.0;	# Earliest version that Coro works with
+use 5.12.0;	# Threads before that are apparently not good
 use strict;
 use warnings;
-# use Coro;
 use threads;
 
 =head1 NAME
@@ -56,7 +54,7 @@ sub new {
 
 	return unless(defined($class));
 
-	return bless { }, $class;
+	return bless({ lock => 0}, $class);
 }
 
 =head2 prime
@@ -85,8 +83,11 @@ sub prime {
 	}
 
 	if($self->{values} && $self->{values}->{$object} && $self->{values}->{$object}->{status}) {
-		return $self;
+		my @call_details = caller(0);
+		die 'Attempt to prime twice at ', $call_details[2], ' of ', $call_details[1];
 	}
+
+	$self->{values}->{$object}->{status} = 'running';
 
 	$self->{values}->{$object}->{thread} = threads->create(sub {
 		my ($o, $m, $a) = @_;
@@ -94,7 +95,7 @@ sub prime {
 			return eval '$o->$m($a)';
 		}
 		return eval '$o->$m()';
-	}, ($args{object}, $args{message}, $args{arg}));
+	}, $args{object}, $args{message}, $args{arg});
 
 	# $self->{values}->{$object}->{thread} = async {
 		# my $o = $args{object};
@@ -105,7 +106,6 @@ sub prime {
 		# return eval '$o->$m()';
 	# };
 
-	$self->{values}->{$object}->{status} = 'running';
 	return $self;	# Easily prime lots of values in one call
 }
 
@@ -119,6 +119,9 @@ Retrieve get a value you've primed.  Takes two mandatory parameters:
 Takes one optional parameter:
 
     arg - passes this argument to the message
+
+If you don't prime it will still work and store the value for subsequent calls,
+but in this scenerio you gain nothing over using CHI to cache your values.
 
 =cut
 
@@ -134,8 +137,17 @@ sub get {
 	}
 
 	if(!defined($self->{values}->{$object}->{status})) {
-		my @call_details = caller(0);
-		die "Need to prime before getting at line ", $call_details[2], ' of ', $call_details[1];
+		# my @call_details = caller(0);
+		# die 'Need to prime before getting at line ', $call_details[2], ' of ', $call_details[1];
+		my ($o, $m, $a) = ($args{object}, $args{message}, $args{arg});
+		my $rc;
+		if($a) {
+			$rc = eval '$o->$m($a)';
+		} else {
+			$rc = eval '$o->$m()';
+		}
+		$self->{values}->{$object}->{status} = 'complete';
+		return $self->{values}->{$object}->{value} = $rc;
 	}
 	if($self->{values}->{$object}->{status} eq 'complete') {
 		return $self->{values}->{$object}->{value};

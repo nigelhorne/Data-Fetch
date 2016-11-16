@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 19;
+use Test::Most tests => 17;
 use Test::NoWarnings;
 
 BEGIN {
@@ -13,15 +13,10 @@ FETCH: {
 	my $simple = Data::Value->new(1);
 	my $fetch = new_ok('Data::Fetch');
 	$fetch->prime(object => $simple, message => 'get');
-	diag($fetch->get(object => $simple, message => 'get'));
-	diag($fetch->get(object => $simple, message => 'get'));
-	diag($fetch->get(object => $simple, message => 'get'));
 	ok($fetch->get(object => $simple, message => 'get') == 1);
 	ok($fetch->get(object => $simple, message => 'get') == 1);
 
 	$simple = Data::Value->new(2);
-	$fetch->prime(object => $simple, message => 'get');
-	ok($fetch->get(object => $simple, message => 'get') == 2);
 	$fetch->prime(object => $simple, message => 'get');
 	ok($fetch->get(object => $simple, message => 'get') == 2);
 	ok($fetch->get(object => $simple, message => 'get') == 2);
@@ -41,12 +36,6 @@ FETCH: {
 	$simple->set(55);
 	$fetch->prime(object => $simple, message => 'get');
 	ok($fetch->get(object => $simple, message => 'get') == 55);
-
-	$simple = Data::Value->new(6);
-	eval {
-		$fetch->get(object => $simple, message => 'get');
-	};
-	ok($@ =~ /Need to prime before getting/);
 
 	# Test returning a list ref.  Note that returning an array isn't yet supported
 	my @in = (7, 8);
