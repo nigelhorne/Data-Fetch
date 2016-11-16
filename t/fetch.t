@@ -13,6 +13,9 @@ FETCH: {
 	my $simple = Data::Value->new(1);
 	my $fetch = new_ok('Data::Fetch');
 	$fetch->prime(object => $simple, message => 'get');
+	diag($fetch->get(object => $simple, message => 'get'));
+	diag($fetch->get(object => $simple, message => 'get'));
+	diag($fetch->get(object => $simple, message => 'get'));
 	ok($fetch->get(object => $simple, message => 'get') == 1);
 	ok($fetch->get(object => $simple, message => 'get') == 1);
 

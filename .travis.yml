@@ -4,11 +4,11 @@ os:
   # - osx
 
 perl:
-  # - "5.22"	# Coro is broken on this - but Coro is still better than threads
-  - "5.20"
-  - "5.18"
-  - "5.16"
-  - "5.14"
+  - "5.22-extras"
+  - "5.20-extras"
+  - "5.18-extras"
+  # - "5.16"
+  # - "5.14"
   # - "5.12"
 
 install:

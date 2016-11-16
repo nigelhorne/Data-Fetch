@@ -14,8 +14,8 @@ package Data::Fetch;
 use 5.10.0;	# Earliest version that Coro works with
 use strict;
 use warnings;
-use Coro;
-# use threads;
+# use Coro;
+use threads;
 
 =head1 NAME
 
@@ -88,22 +88,22 @@ sub prime {
 		return $self;
 	}
 
-	# $self->{values}->{$object}->{thread} = threads->create(sub {
-		# my ($o, $m, $a) = @_;
-		# if($a) {
-			# return eval '$o->$m($a)';
-		# }
-		# return eval '$o->$m()';
-	# }, ($args{object}, $args{message}, $args{arg}));
-
-	$self->{values}->{$object}->{thread} = async {
-		my $o = $args{object};
-		my $m = $args{message};
-		if(my $a = $args{arg}) {
+	$self->{values}->{$object}->{thread} = threads->create(sub {
+		my ($o, $m, $a) = @_;
+		if($a) {
 			return eval '$o->$m($a)';
 		}
 		return eval '$o->$m()';
-	};
+	}, ($args{object}, $args{message}, $args{arg}));
+
+	# $self->{values}->{$object}->{thread} = async {
+		# my $o = $args{object};
+		# my $m = $args{message};
+		# if(my $a = $args{arg}) {
+			# return eval '$o->$m($a)';
+		# }
+		# return eval '$o->$m()';
+	# };
 
 	$self->{values}->{$object}->{status} = 'running';
 	return $self;	# Easily prime lots of values in one call
@@ -160,9 +160,9 @@ sub DESTROY {
 
 	foreach my $o(values %{$self->{values}}) {
 		if($o->{thread}) {
-			# if($o->{thread}->is_running()) {
-				# $o->{thread}->detach();
-			# }
+			if($o->{thread}->is_running()) {
+				$o->{thread}->detach();
+			}
 			delete $o->{thread};
 			delete $o->{value};
 		}
