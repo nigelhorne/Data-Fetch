@@ -1,6 +1,7 @@
 Revision history for Data::Fetch
 
 0.05
+	Go back to using threads
 	Return value even when not primed
 
 0.04	Tue, 15 Nov 2016 18:42:11 GMT
