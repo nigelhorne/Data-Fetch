@@ -53,11 +53,10 @@ FETCH: {
 	# ok($res[0] == 7);
 	# ok($res[1] == 8);
 
-	# Test routines that return undef
 	$simple = Data::Value->new();
 	$fetch->prime(object => $simple, message => 'get');
-	ok(!defined($fetch->get(object => $simple, message => 'get')));
-	ok(!defined($fetch->get(object => $simple, message => 'get')));
+	is($fetch->get(object => $simple, message => 'get'), undef, 'Test routines that return undef');
+	is($fetch->get(object => $simple, message => 'get'), undef, 'Test routine returns undef on second call');
 }
 
 package Data::Value;
