@@ -22,7 +22,7 @@ FETCH: {
 	ok($fetch->get(object => $simple, message => 'get') == 2);
 	$simple->set(22);
 	ok($simple->get() == 22);
-	ok($fetch->get(object => $simple, message => 'get') == 2);	# Values are "cached"
+	is($fetch->get(object => $simple, message => 'get'), 2, 'Check values are cached');
 
 	$simple = Data::Value->new(3);
 	$fetch->prime(object => $simple, message => 'get', arg => 'prefix');
@@ -42,9 +42,9 @@ FETCH: {
 	$simple = Data::Value->new(\@in);
 	$fetch->prime(object => $simple, message => 'get');
 	my @res = @{$fetch->get(object => $simple, message => 'get')};
-	ok(scalar(@res) == 2);
-	ok($res[0] == 7);
-	ok($res[1] == 8);
+	is(scalar(@res), 2, 'Check 2 items returned');
+	is($res[0], 7, 'Check first item is correct');
+	is($res[1], 8, 'Check second item is correct');
 
 	# $simple = Array::Value->new();
 	# $fetch->prime(object => $simple, message => 'get');
