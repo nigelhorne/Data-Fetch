@@ -8,7 +8,7 @@ Give advance warning that you'll be needing a value
 
 # VERSION
 
-Version 0.04
+Version 0.05
 
 # SYNOPSIS
 
@@ -52,11 +52,16 @@ Takes one optional parameter:
 
     arg - passes this argument to the message
 
+If you don't prime it will still work and store the value for subsequent calls,
+but in this scenerio you gain nothing over using CHI to cache your values.
+
 # AUTHOR
 
 Nigel Horne, `<njh at bandsman.co.uk>`
 
 # BUGS
+
+ARRAY contexts not supported.
 
 Can't pass more than one argument to the message.
 
