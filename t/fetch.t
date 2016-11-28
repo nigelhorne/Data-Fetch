@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 17;
+use Test::Most tests => 24;
 use Test::NoWarnings;
 
 BEGIN {
@@ -46,12 +46,27 @@ FETCH: {
 	is($res[0], 7, 'Check first item is correct');
 	is($res[1], 8, 'Check second item is correct');
 
-	# $simple = Array::Value->new();
-	# $fetch->prime(object => $simple, message => 'get');
-	# @res = $fetch->get(object => $simple, message => 'get');
-	# ok(scalar(@res) == 2);
-	# ok($res[0] == 7);
-	# ok($res[1] == 8);
+	# Primed array
+	$simple = Array::Value->new();
+	@res = $fetch->prime(object => $simple, message => 'get');
+	@res = $fetch->get(object => $simple, message => 'get');
+	is(scalar(@res), 2, 'Test array context returns the correct number of elements');
+	is($res[0], 'a', 'Test first element of array is correct');
+	is($res[1], 'b', 'Test second element of array is correct');
+
+	# Unprimed array
+	$simple = Array::Value->new();
+	@res = $fetch->get(object => $simple, message => 'get');
+	is(scalar(@res), 2, 'Test array context returns the correct number of elements');
+	is($res[0], 'a', 'Test first element of array is correct');
+	is($res[1], 'b', 'Test second element of array is correct');
+
+	TODO: {
+		todo_skip "Caching of arrays doesn't work", 1;
+		# FIXME - this doesn't work
+		@res = $fetch->get(object => $simple, message => 'get');	# Check caching works on an array
+		is($res[1], 'b', 'Test second element of cached array is correct');
+	}
 
 	$simple = Data::Value->new();
 	$fetch->prime(object => $simple, message => 'get');
@@ -92,21 +107,21 @@ sub set {
 
 1;
 
-# package Array::Value;
-# 
-# sub new {
-	# my $proto = shift;
-	# my $class = ref($proto) || $proto;
-# 
-	# return unless(defined($class));
-# 
-	# return bless { }, $class;
-# }
-# 
-# sub get {
-	# my $self = shift;
-# 
-	# return('a', 'b');
-# }
-# 
+package Array::Value;
+
+sub new {
+	my $proto = shift;
+	my $class = ref($proto) || $proto;
+
+	return unless(defined($class));
+
+	return bless { }, $class;
+}
+
+sub get {
+	my $self = shift;
+
+	return('a', 'b');
+}
+
 1;

@@ -60,6 +60,8 @@ sub new {
 =head2 prime
 
 Say what is is you'll be needing later.
+Call in an array context if get() is to be used in an array context.
+
 Takes two mandatory parameters:
 
     object - the object you'll be sending the message to
@@ -90,12 +92,21 @@ sub prime {
 	$self->{values}->{$object}->{status} = 'running';
 
 	$self->{values}->{$object}->{thread} = threads->create(sub {
-		my ($o, $m, $a) = @_;
+		my ($o, $m, $a, $wantarray) = @_;
+		if($wantarray) {
+			my @rc;
+			if($a) {
+				@rc = eval '$o->$m($a)';
+			} else {
+				@rc = eval '$o->$m()';
+			}
+			return \@rc;
+		}
 		if($a) {
 			return eval '$o->$m($a)';
 		}
 		return eval '$o->$m()';
-	}, $args{object}, $args{message}, $args{arg});
+	}, $args{object}, $args{message}, $args{arg}, wantarray);
 
 	# $self->{values}->{$object}->{thread} = async {
 		# my $o = $args{object};
@@ -111,7 +122,10 @@ sub prime {
 
 =head2 get
 
-Retrieve get a value you've primed.  Takes two mandatory parameters:
+Retrieve get a value you've primed.
+Call in an array context only works if prime() was called in an array context, or the value wasn't primed
+
+Takes two mandatory parameters:
 
     object - the object you'll be sending the message to
     message - the message you'll be sending
@@ -140,23 +154,46 @@ sub get {
 		# my @call_details = caller(0);
 		# die 'Need to prime before getting at line ', $call_details[2], ' of ', $call_details[1];
 		my ($o, $m, $a) = ($args{object}, $args{message}, $args{arg});
-		my $rc;
-		if($a) {
-			$rc = eval '$o->$m($a)';
+		if(wantarray) {
+			my @rc;
+			if($a) {
+				@rc = eval '$o->$m($a)';
+			} else {
+				@rc = eval '$o->$m()';
+			}
+			$self->{values}->{$object}->{status} = 'complete';
+			$self->{values}->{$object}->{value} = @rc;
+			return @rc;
 		} else {
-			$rc = eval '$o->$m()';
+			my $rc;
+			if($a) {
+				$rc = eval '$o->$m($a)';
+			} else {
+				$rc = eval '$o->$m()';
+			}
+			$self->{values}->{$object}->{status} = 'complete';
+			return $self->{values}->{$object}->{value} = $rc;
 		}
-		$self->{values}->{$object}->{status} = 'complete';
-		return $self->{values}->{$object}->{value} = $rc;
 	}
 	if($self->{values}->{$object}->{status} eq 'complete') {
+		if(wantarray) {
+			my @rc = $self->{values}->{$object}->{value};
+			return @rc;
+		}
 		return $self->{values}->{$object}->{value};
 	}
 	if($self->{values}->{$object}->{status} eq 'running') {
+		if(wantarray) {
+			my $rc = $self->{values}->{$object}->{thread}->join();
+			my @rc = @{$rc};
+			$self->{values}->{$object}->{status} = 'complete';
+			delete $self->{values}->{$object}->{thread};
+			push @{$self->{values}->{$object}->{value}}, @rc;
+			return @rc;
+		}
 		my $rc = $self->{values}->{$object}->{thread}->join();
 		$self->{values}->{$object}->{status} = 'complete';
 		delete $self->{values}->{$object}->{thread};
-		# $self->{values}->{$object}->{thread} = undef;	# ????
 		return $self->{values}->{$object}->{value} = $rc;
 	}
 	die 'Unknown status: ', $self->{values}->{$object}->{status};
@@ -187,7 +224,9 @@ Nigel Horne, C<< <njh at bandsman.co.uk> >>
 
 =head1 BUGS
 
-ARRAY contexts not supported.
+Caching of arrays doesn't work:
+in an ARRAY context if you get() the values more than once,
+subsequent calls give an incorrect value.
 
 Can't pass more than one argument to the message.
 
