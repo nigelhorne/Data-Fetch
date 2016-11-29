@@ -163,7 +163,6 @@ sub get {
 			} else {
 				@rc = eval '$o->$m()';
 			}
-			# $self->{values}->{$object}->{value} = @rc;
 			push @{$self->{values}->{$object}->{value}}, @rc;
 			return @rc;
 		} else {
@@ -177,11 +176,12 @@ sub get {
 		}
 	}
 	if($self->{values}->{$object}->{status} eq 'complete') {
-		if(wantarray) {
-			my @rc = @{$self->{values}->{$object}->{value}};
+		my $value = $self->{values}->{$object}->{value};
+		if(wantarray && (ref($value) eq 'ARRAY')) {
+			my @rc = @{$value};
 			return @rc;
 		}
-		return $self->{values}->{$object}->{value};
+		return $value;
 	}
 	if($self->{values}->{$object}->{status} eq 'running') {
 		$self->{values}->{$object}->{status} = 'complete';
