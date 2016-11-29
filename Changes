@@ -1,7 +1,7 @@
 Revision history for Data::Fetch
 
 0.06
-	Array contexts now work, as long as you don't call get() more than once
+	Support arrays
 
 0.05	Wed Nov 23 17:28:06 EST 2016
 	Go back to using threads

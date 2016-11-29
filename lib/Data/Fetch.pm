@@ -153,6 +153,8 @@ sub get {
 	if(!defined($self->{values}->{$object}->{status})) {
 		# my @call_details = caller(0);
 		# die 'Need to prime before getting at line ', $call_details[2], ' of ', $call_details[1];
+
+		$self->{values}->{$object}->{status} = 'complete';
 		my ($o, $m, $a) = ($args{object}, $args{message}, $args{arg});
 		if(wantarray) {
 			my @rc;
@@ -161,8 +163,8 @@ sub get {
 			} else {
 				@rc = eval '$o->$m()';
 			}
-			$self->{values}->{$object}->{status} = 'complete';
-			$self->{values}->{$object}->{value} = @rc;
+			# $self->{values}->{$object}->{value} = @rc;
+			push @{$self->{values}->{$object}->{value}}, @rc;
 			return @rc;
 		} else {
 			my $rc;
@@ -171,28 +173,25 @@ sub get {
 			} else {
 				$rc = eval '$o->$m()';
 			}
-			$self->{values}->{$object}->{status} = 'complete';
 			return $self->{values}->{$object}->{value} = $rc;
 		}
 	}
 	if($self->{values}->{$object}->{status} eq 'complete') {
 		if(wantarray) {
-			my @rc = $self->{values}->{$object}->{value};
+			my @rc = @{$self->{values}->{$object}->{value}};
 			return @rc;
 		}
 		return $self->{values}->{$object}->{value};
 	}
 	if($self->{values}->{$object}->{status} eq 'running') {
+		$self->{values}->{$object}->{status} = 'complete';
 		if(wantarray) {
-			my $rc = $self->{values}->{$object}->{thread}->join();
-			my @rc = @{$rc};
-			$self->{values}->{$object}->{status} = 'complete';
+			my @rc = @{$self->{values}->{$object}->{thread}->join()};
 			delete $self->{values}->{$object}->{thread};
 			push @{$self->{values}->{$object}->{value}}, @rc;
 			return @rc;
 		}
 		my $rc = $self->{values}->{$object}->{thread}->join();
-		$self->{values}->{$object}->{status} = 'complete';
 		delete $self->{values}->{$object}->{thread};
 		return $self->{values}->{$object}->{value} = $rc;
 	}
@@ -223,10 +222,6 @@ sub DESTROY {
 Nigel Horne, C<< <njh at bandsman.co.uk> >>
 
 =head1 BUGS
-
-Caching of arrays doesn't work:
-in an ARRAY context if you get() the values more than once,
-subsequent calls give an incorrect value.
 
 Can't pass more than one argument to the message.
 

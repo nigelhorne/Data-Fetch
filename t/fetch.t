@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 24;
+use Test::Most tests => 28;
 use Test::NoWarnings;
 
 BEGIN {
@@ -54,19 +54,23 @@ FETCH: {
 	is($res[0], 'a', 'Test first element of array is correct');
 	is($res[1], 'b', 'Test second element of array is correct');
 
+	# Primed array with arguments
+	$simple = Array::Value->new();
+	@res = $fetch->prime(object => $simple, message => 'get', arg => 'array');
+	@res = $fetch->get(object => $simple, message => 'get', arg => 'array');
+	is(scalar(@res), 2, 'Test array context returns the correct number of elements');
+	is($res[0], 'array: a', 'Test first element of array is correct with arguments');
+	is($res[1], 'array: b', 'Test second element of array is correct with arguments');
+
 	# Unprimed array
 	$simple = Array::Value->new();
+	$fetch = new_ok('Data::Fetch');
 	@res = $fetch->get(object => $simple, message => 'get');
 	is(scalar(@res), 2, 'Test array context returns the correct number of elements');
 	is($res[0], 'a', 'Test first element of array is correct');
 	is($res[1], 'b', 'Test second element of array is correct');
-
-	TODO: {
-		todo_skip "Caching of arrays doesn't work", 1;
-		# FIXME - this doesn't work
-		@res = $fetch->get(object => $simple, message => 'get');	# Check caching works on an array
-		is($res[1], 'b', 'Test second element of cached array is correct');
-	}
+	@res = $fetch->get(object => $simple, message => 'get');	# Check caching works on an array
+	is($res[1], 'b', 'Test second element of cached array is correct');
 
 	$simple = Data::Value->new();
 	$fetch->prime(object => $simple, message => 'get');
@@ -115,11 +119,19 @@ sub new {
 
 	return unless(defined($class));
 
+	if(my $value = shift) {
+		return bless { value => $value }, $class;
+	}
 	return bless { }, $class;
 }
 
 sub get {
 	my $self = shift;
+	my $arg = shift;
+
+	if($arg) {
+		return("$arg: a", "$arg: b");
+	}
 
 	return('a', 'b');
 }
