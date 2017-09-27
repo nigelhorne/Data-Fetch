@@ -2,7 +2,8 @@
 
 use strict;
 use warnings;
-use Test::Most tests => 28;
+use threads;
+use Test::Most tests => 29;
 use Test::Warn;
 
 BEGIN {
@@ -80,6 +81,13 @@ FETCH: {
 		is($fetch->get(object => $simple, message => 'get'), undef, 'Test routines that return undef');
 		is($fetch->get(object => $simple, message => 'get'), undef, 'Test routine returns undef on second call');
 	} qr/primed but not used at/, 'test leak is caught';
+
+	# Clean the leaked thread
+	my @threads = threads->list();
+	ok(scalar(@threads) == 1);
+	foreach my $t(@threads) {
+		$t->join();
+	}
 }
 
 package Data::Value;
