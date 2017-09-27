@@ -1,9 +1,11 @@
+#!/usr/bin/env perl
+
 use strict;
 use warnings;
 
 no lib '.';
 
-use ExtUtils::MakeMaker;
+use ExtUtils::MakeMaker 6.64;	# 6.64 for TEST_REQUIRES
 use Config;
 
 unless($Config{usethreads}) {
@@ -21,9 +23,10 @@ WriteMakefile(
       ? ('LICENSE'=> 'GPL')
       : ()),
     PL_FILES	=> {},
-    BUILD_REQUIRES => {
+    TEST_REQUIRES => {
 	'Test::Most' => 0,
 	'Test::NoWarnings' => 0,
+	'Test::Warn' => 0,
 	'Test::CleanNamespaces' => 0,
 	# 'Test::Kwalitee' => 0,
     },

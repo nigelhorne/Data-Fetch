@@ -206,13 +206,18 @@ sub DESTROY {
 
 	return unless($self->{values});
 
-	foreach my $o(values %{$self->{values}}) {
-		if($o->{thread}) {
-			if($o->{thread}->is_running()) {
-				$o->{thread}->detach();
+	foreach my $v(values %{$self->{values}}) {
+		if($v->{thread}) {
+			if($v->{thread}->is_running()) {
+				$v->{thread}->detach();
+			} else {
+				# FIXME: join the thread.
+				# However that's not a good idea in a DESTROY
+				#	routine
+				warn 'Thread ', $v->{thread}->tid(), ' primed but not used';
 			}
-			delete $o->{thread};
-			delete $o->{value};
+			delete $v->{thread};
+			delete $v->{value};
 		}
 	}
 }
