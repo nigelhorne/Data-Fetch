@@ -143,6 +143,9 @@ sub get {
 	my $self = shift;
 	my %args = (ref($_[0]) eq 'HASH') ? %{$_[0]} : @_;
 
+	# I'm not sure that silently ignoring that the two arguments are
+	#	mandatory is a good idea
+	
 	return unless($args{'object'} && $args{'message'});
 
 	my $object = $args{'object'} . '->' . $args{'message'};
@@ -276,9 +279,9 @@ L<http://search.cpan.org/dist/Data-Fetch/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2016 Nigel Horne.
+Copyright 2016-2019 Nigel Horne.
 
-This program is released under the following licence: GPL
+This program is released under the following licence: GPL2
 
 =cut
 
