@@ -265,10 +265,6 @@ L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-Fetch>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/Data-Fetch>
-
-=item * CPAN Ratings
-
 L<http://cpanratings.perl.org/d/Data-Fetch>
 
 =item * Search CPAN
