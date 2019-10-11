@@ -3,19 +3,41 @@ os:
   - linux
   # - osx
 
+env: AUTOMATED_TESTING=1
+
 perl:
+  - "5.30"
+  - "5.28"
+  - "5.26"
   - "5.24-extras"
-  - "5.22-extras"
-  - "5.20-extras"
-  - "5.18-extras"
+  - "5.22"
+  # - "5.20"
+  # - "5.18"
   # - "5.16"
   # - "5.14"
   # - "5.12"
 
 install:
-  - cpanm -n Devel::Cover Devel::Cover::Report::Coveralls Test::Script Test::Pod::Spelling::CommonMistakes Test::Portability::Files Test::Most Test::CleanNamespaces Test::NoWarnings Test::Warn
+  - cpanm -n Devel::Cover Devel::Cover::Report::Coveralls Test::Pod::Spelling::CommonMistakes Test::Portability::Files Test::Most Test::CleanNamespaces Test::NoWarnings Test::Warn
+  - cpanm -v --installdeps --notest .
+
+install:
   - cpanm -v --installdeps --notest .
 
 script:
-  # perl Makefile.PL && make && cover -test -report coveralls
-  perl Makefile.PL && make && make test
+  perl Makefile.PL && make && cover -test -report coveralls
+
+jobs:
+  include:
+    - stage: Windows
+      os: windows
+      language: shell
+      before_install:
+        - cinst -y strawberryperl
+        - export "PATH=/c/Strawberry/perl/site/bin:/c/Strawberry/perl/bin:/c/Strawberry/c/bin:$PATH"
+      install:
+        - cpanm --notest --installdeps .
+      script:
+        - perl Makefile.PL
+        - gmake
+        - gmake test
