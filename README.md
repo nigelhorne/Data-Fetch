@@ -1,6 +1,11 @@
-[![Linux Build Status](https://travis-ci.org/nigelhorne/Data-Fetch.svg?branch=master)](https://travis-ci.org/nigelhorne/Data-Fetch)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/uexrsduxn2yk58on/branch/master?svg=true)](https://ci.appveyor.com/project/nigelhorne/data-fetch/branch/master)
-[![Dependency Status](https://dependencyci.com/github/nigelhorne/Data-Fetch/badge)](https://dependencyci.com/github/nigelhorne/Data-Fetch)
+[![Actions Status](https://github.com/nigelhorne/Data-Fetch/workflows/.github/workflows/all.yml/badge.svg)](https://github.com/nigelhorne/Data-Fetch/actions)
+[![Travis Status](https://travis-ci.org/nigelhorne/Data-Fetch.svg?branch=master)](https://travis-ci.org/nigelhorne/Data-Fetch)
+[![Appveyor Status](https://ci.appveyor.com/api/projects/status/1t1yhvagx00c2qi8?svg=true)](https://ci.appveyor.com/project/nigelhorne/cgi-info)
+[![Appveyor status](https://ci.appveyor.com/api/projects/status/uexrsduxn2yk58on/branch/master?svg=true)](https://ci.appveyor.com/project/nigelhorne/data-fetch/branch/master)
+[![Coveralls Status](https://coveralls.io/repos/github/nigelhorne/Data-Fetch/badge.svg?branch=master)](https://coveralls.io/github/nigelhorne/Data-Fetch?branch=master)
+[![CPAN](https://img.shields.io/cpan/v/Data-Fetch.svg)](http://search.cpan.org/~nhorne/Data-Fetch/)
+[![Kritika Analysis Status](https://kritika.io/users/nigelhorne/repos/5642353356298438/heads/master/status.svg)](https://kritika.io/users/nigelhorne/repos/5642353356298438/heads/master/)
+[![Kwalitee](https://cpants.cpanauthors.org/dist/Data-Fetch.png)](http://cpants.cpanauthors.org/dist/Data-Fetch)
 
 # NAME
 
