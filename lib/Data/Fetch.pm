@@ -145,7 +145,7 @@ sub get {
 
 	# I'm not sure that silently ignoring that the two arguments are
 	#	mandatory is a good idea
-	
+
 	return unless($args{'object'} && $args{'message'});
 
 	my $object = $args{'object'} . '->' . $args{'message'};
