@@ -1,7 +1,7 @@
 package Data::Fetch;
 
 # Author Nigel Horne: njh@bandsman.co.uk
-# Copyright (C) 2016, Nigel Horne
+# Copyright (C) 2016-2020, Nigel Horne
 
 # Usage is subject to licence terms.
 # The licence terms of this software are as follows:
@@ -259,26 +259,38 @@ You can also look for information at:
 
 =over 4
 
+=item * MetaCPAN
+
+L<https://metacpan.org/release/Data-Fetch>
+
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-Fetch>
+L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-Fetch>
 
-=item * AnnoCPAN: Annotated CPAN documentation
+=item * CPANTS
+
+L<http://cpants.cpanauthors.org/dist/Data-Fetch>
+
+=item * CPAN Testers' Matrix
+
+L<http://matrix.cpantesters.org/?dist=Data-Fetch>
+
+=item * CPAN Ratings
 
 L<http://cpanratings.perl.org/d/Data-Fetch>
 
-=item * Search CPAN
+=item * CPAN Testers Dependencies
 
-L<http://search.cpan.org/dist/Data-Fetch/>
+L<http://deps.cpantesters.org/?module=Data::Fetch>
 
 =back
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2016-2019 Nigel Horne.
+Copyright 2010-2020 Nigel Horne.
 
 This program is released under the following licence: GPL2
 
 =cut
 
-1; # End of Data::Fetch
+1;
