@@ -13,7 +13,7 @@ Data::Fetch - give advance warning that you'll be needing a value
 
 # VERSION
 
-Version 0.05
+Version 0.06
 
 # SYNOPSIS
 
