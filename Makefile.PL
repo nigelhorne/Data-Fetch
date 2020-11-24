@@ -38,11 +38,17 @@ WriteMakefile(
     META_MERGE		=> {
     	'meta-spec' => { version => 2 },
     	resources => {
-    		repository => {
+		repository => {
 			type => 'git',
+			# repository => 'https://github.com/nigelhorne/Data-Fetch',
 			url => 'git://github.com/nigelhorne/Data-Fetch.git',
 			web => 'https://github.com/nigelhorne/Data-Fetch',
-    		},
+		}, bugtracker => {
+			# web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Data-Fetch',
+			web => 'https://github.com/nigelhorne/Data-Fetch/issues',
+			url => 'https://github.com/nigelhorne/Data-Fetch/issues',
+			mailto => 'bug-Data-Fetch@rt.cpan.org'
+		}
 	},
     },
     MIN_PERL_VERSION	=> '5.12.0'	# Get decent thread support
