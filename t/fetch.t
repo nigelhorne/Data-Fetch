@@ -84,7 +84,7 @@ FETCH: {
 
 	# Clean the leaked thread
 	my @threads = threads->list();
-	ok(scalar(@threads) == 1);
+	is(scalar(@threads), 1, 'There is one thread left');
 	foreach my $t(@threads) {
 		$t->join();
 	}
