@@ -87,6 +87,19 @@ or through the web interface at
 I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
+See [http://www.cpantesters.org/cpan/report/116390147](http://www.cpantesters.org/cpan/report/116390147).
+This code could produce the "attempt to prime twice" if you're unlucky and Perl assigns the
+same address to the new object as the old object.
+
+    my $fetch = Data::Fetch->new();
+    my $data = Class::Simple->new();
+    $fetch->prime(object => $data, message => 'get');
+    $fetch->get(object => $data, message => 'get');
+    $data = Class::Simple->new();       # Possibly the address of $data isn't changed
+    $fetch->prime(object => $data, message => 'get');   # <<<< This could produce the error
+
+Perhaps the use of
+
 # SEE ALSO
 
 # SUPPORT
