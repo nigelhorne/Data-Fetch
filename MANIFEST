@@ -27,10 +27,11 @@ t/no404s.t
 t/noopentickets.t
 t/noplan.t
 t/pod-cm.t
+t/pod-snippets.t
+t/pod-synopsis.t
 t/pod.t
 t/port.t
 t/prereq.t
-t/snippets.t
 t/spelling.t
 t/strict.t
 t/unused.t
