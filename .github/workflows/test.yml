@@ -34,8 +34,8 @@ jobs:
       - run: perl -V
       - name: Install Dependencies
         run: |
-          cpanm -iqn ExtUtils::MakeMaker Test::Most
-          cpanm -iqn --skip-satisfied --installdeps --notest .
+          cpanm -iqn ExtUtils::MakeMaker Test::Most App::cpanminus
+          cpanm -ivn --skip-satisfied --installdeps --notest .
       - name: Make Module
         run: |
           find . -name build.log | xargs cat
