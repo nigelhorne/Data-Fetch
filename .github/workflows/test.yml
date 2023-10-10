@@ -39,10 +39,10 @@ jobs:
           cpanm -iqn --skip-satisfied --installdeps --notest .
       - name: Make Module
         run: |
-          # find . -name build.log | xargs cat
+          find . -name build.log | xargs cat
           perl Makefile.PL
           make
       - name: Run Tests
         run: prove -l -b t
         env:
-          AUTHOR_TESTING: 1
+          AUTOMATED_TESTING: 1
