@@ -54,7 +54,7 @@ sub new {
 
 	return unless(defined($class));
 
-	return bless({ lock => 0}, $class);
+	return bless({ lock => 0 }, $class);
 }
 
 =head2 prime
