@@ -13,6 +13,15 @@ unless($Config{usethreads}) {
 	exit(0);
 }
 
+my $dist = {
+	COMPRESS => 'gzip -9f',
+	SUFFIX => 'gz'
+};
+
+if($^O eq 'darwin') {
+	$dist->{'TAR'} = 'gtar';
+}
+
 WriteMakefile(
     NAME		=> 'Data::Fetch',
     AUTHOR		=> q{Nigel Horne <njh@bandsman.co.uk>},
@@ -24,6 +33,7 @@ WriteMakefile(
       : ()),
     PL_FILES	=> {},
     TEST_REQUIRES => {
+	'Test::DescribeMe' => 0,
 	'Test::Most' => 0,
 	'Test::Needs' => 0,
 	'Test::NoWarnings' => 0,
@@ -32,8 +42,7 @@ WriteMakefile(
 	# 'Test::Kwalitee' => 0,
     }, PREREQ_PM => {
 	'threads' => 0,
-    },
-    dist		=> { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+    }, dist => $dist,
     clean		=> { FILES => 'Data-Fetch-*' },
     META_MERGE		=> {
     	'meta-spec' => { version => 2 },

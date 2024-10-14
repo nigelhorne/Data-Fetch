@@ -288,10 +288,6 @@ L<http://cpants.cpanauthors.org/dist/Data-Fetch>
 
 L<http://matrix.cpantesters.org/?dist=Data-Fetch>
 
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Data-Fetch>
-
 =item * CPAN Testers Dependencies
 
 L<http://deps.cpantesters.org/?module=Data::Fetch>
@@ -300,7 +296,7 @@ L<http://deps.cpantesters.org/?module=Data::Fetch>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2010-2020 Nigel Horne.
+Copyright 2010-2024 Nigel Horne.
 
 This program is released under the following licence: GPL2
 
