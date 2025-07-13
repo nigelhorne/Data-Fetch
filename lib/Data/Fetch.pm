@@ -147,6 +147,7 @@ sub prime {
 	}
 
 	$self->{values}->{$key}->{status} = 'running';
+	$self->{values}->{$key}->{wantarray} = $args{'wantarray'};
 
 	$self->{values}->{$key}->{thread} = threads->create(sub {
 		my ($o, $m, $a, $wantarray) = @_;
@@ -256,6 +257,9 @@ sub get {
 		$self->{values}->{$key}->{status} = 'complete';
 		$self->{values}->{$key}->{joined} = 1;	# Mark as joined
 		if(wantarray) {
+			if(!$self->{'values'}->{$key}->{'wantarray'}) {
+				warn 'get() called in array mode, but wantarray not passed to prime()'; 
+			}
 			my $ret = $self->{values}->{$key}->{thread}->join();
 			my @rc;
 			if(ref($ret) eq 'ARRAY') {
