@@ -13,7 +13,7 @@ Data::Fetch - Prime method calls for background execution using threads
 
 # VERSION
 
-Version 0.06
+Version 0.07
 
 # SYNOPSIS
 
@@ -68,32 +68,36 @@ Constructs and returns a new `Data::Fetch` object.
     $fetcher->prime(
         object  => $obj,
         message => 'method_name',
-        arg     => $arg         # Optional
+        arg     => $args_ref    # Optional
     );
 
-Primes a method call to be executed in the background.
-This prepares the value for later retrieval via `get`.
+Starts a background thread that will call the given method on the object.
 
-Arguments:
+Takes the following parameters:
 
 - object
 
-    The object to call the method on.
+    The object on which the method will be invoked.
 
 - message
 
-    The method name to invoke (a string).
+    The name of the method to call.
 
 - arg
 
-    Optional.
-    A single scalar argument passed to the method.
-    If multiple values are needed, use an arrayref or hashref and unpack inside your method.
+    (Optional) The arguments to pass to the method. This must be:
 
-`prime` should be called in the same context (scalar or list) as `get`,
-or else results may be inconsistent or incorrect.
+    \- A scalar
+    \- An arrayref of positional arguments
+    \- A hashref of named arguments
 
-Dies if the same method is primed twice on the same object.
+    The arguments are passed to the method using Perl's standard `@_` behavior:
+
+        $obj->$method(@$args)      # if arg is an arrayref
+        $obj->$method(%$args)      # if arg is a hashref
+        $obj->$method($arg)        # otherwise
+
+If called in list context, the method result will be stored and returned in list context when retrieved via `get()`.
 
 ## get
 
@@ -115,7 +119,7 @@ If the method returns a list, use:
 
 # AUTHOR
 
-Nigel Horne, `<njh at bandsman.co.uk>`
+Nigel Horne, `<njh at nigelhorne.com>`
 
 # BUGS
 
@@ -145,8 +149,6 @@ same address to the new object as the old object.
     $fetch->get(object => $data, message => 'get');
     $data = Class::Simple->new();       # Possibly the address of $data isn't changed
     $fetch->prime(object => $data, message => 'get');   # <<<< This could produce the error
-
-Perhaps the use of
 
 # SEE ALSO
 
@@ -182,6 +184,6 @@ You can also look for information at:
 
 # LICENSE AND COPYRIGHT
 
-Copyright 2010-2024 Nigel Horne.
+Copyright 2010-2025 Nigel Horne.
 
 This program is released under the following licence: GPL2

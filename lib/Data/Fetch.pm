@@ -20,11 +20,11 @@ Data::Fetch - Prime method calls for background execution using threads
 
 =head1 VERSION
 
-Version 0.06
+Version 0.07
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 =head1 SYNOPSIS
 
@@ -340,8 +340,6 @@ same address to the new object as the old object.
     $fetch->get(object => $data, message => 'get');
     $data = Class::Simple->new();	# Possibly the address of $data isn't changed
     $fetch->prime(object => $data, message => 'get');	# <<<< This could produce the error
-
-Perhaps the use of
 
 =head1 SEE ALSO
 
