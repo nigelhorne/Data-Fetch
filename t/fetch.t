@@ -52,7 +52,7 @@ FETCH: {
 
 		# Primed array
 		my $seven = Array::Value->new();
-		@res = $fetch->prime(object => $seven, message => 'get');
+		$fetch->prime(object => $seven, message => 'get', wantarray => 1);
 		@res = $fetch->get(object => $seven, message => 'get');
 		is(scalar(@res), 2, 'Test array context returns the correct number of elements');
 		is($res[0], 'a', 'Test first element of array is correct');
@@ -60,7 +60,7 @@ FETCH: {
 
 		# Primed array with arguments
 		my $eight = Array::Value->new();
-		@res = $fetch->prime(object => $eight, message => 'get', arg => 'array');
+		$fetch->prime(object => $eight, message => 'get', arg => 'array', wantarray => 1);
 		@res = $fetch->get(object => $eight, message => 'get', arg => 'array');
 		is(scalar(@res), 2, 'Test array context returns the correct number of elements');
 		is($res[0], 'array: a', 'Test first element of array is correct with arguments');

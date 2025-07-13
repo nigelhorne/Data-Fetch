@@ -1,5 +1,8 @@
 Revision history for Data::Fetch
 
+0.08
+	Prime() now takes a flag "wantarray" since calling it in array mode was wrong
+
 0.07	Sun Jul 13 09:04:40 EDT 2025
 	Clearer documentation
 	Improved key to reduce chances of name clashes

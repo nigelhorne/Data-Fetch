@@ -115,6 +115,7 @@ The name of the method to call.
 - A scalar
 - An arrayref of positional arguments
 - A hashref of named arguments
+- wantarray flag
 
 The arguments are passed to the method using Perl's standard C<@_> behavior:
 
@@ -124,7 +125,7 @@ The arguments are passed to the method using Perl's standard C<@_> behavior:
 
 =back
 
-If called in list context, the method result will be stored and returned in list context when retrieved via C<get()>.
+If wantarray is given and set, the method result will be stored and returned in list context when retrieved via C<get()>.
 
 =cut
 
@@ -169,7 +170,7 @@ sub prime {
 			return eval '$o->$m($a)';
 		}
 		return eval '$o->$m()';
-	}, $args{object}, $args{message}, $args{arg}, wantarray);
+	}, $args{object}, $args{message}, $args{arg}, $args{wantarray});
 
 	# $self->{values}->{$key}->{thread} = async {
 		# my $o = $args{object};
@@ -255,7 +256,13 @@ sub get {
 		$self->{values}->{$key}->{status} = 'complete';
 		$self->{values}->{$key}->{joined} = 1;	# Mark as joined
 		if(wantarray) {
-			my @rc = @{$self->{values}->{$key}->{thread}->join()};
+			my $ret = $self->{values}->{$key}->{thread}->join();
+			my @rc;
+			if(ref($ret) eq 'ARRAY') {
+				@rc = @{$ret};
+			} else {
+				@rc = ($ret);
+			}
 			delete $self->{values}->{$key}->{thread};
 			push @{$self->{values}->{$key}->{value}}, @rc;
 			return @rc;
@@ -288,9 +295,9 @@ sub DESTROY
 			next;
 		}
 
-		if ($thread->is_running) {
+		if($thread->is_running()) {
 			warn 'Thread ', $thread->tid(), ' primed but not used; detaching';
-			$thread->detach;
+			$thread->detach();
 		} else {
 		# } elsif ($thread->is_joinable && ($v->{'status'} ne 'complete')) {
 			# FIXME: join the thread.
