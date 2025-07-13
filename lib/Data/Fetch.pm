@@ -1,8 +1,5 @@
 package Data::Fetch;
 
-# Author Nigel Horne: njh@bandsman.co.uk
-# Copyright (C) 2016-2020, Nigel Horne
-
 # Usage is subject to licence terms.
 # The licence terms of this software are as follows:
 # Personal single user, single computer use: GPL2
@@ -14,6 +11,8 @@ use 5.12.0;	# Threads before that are apparently not good
 use strict;
 use warnings;
 use threads;
+
+use Scalar::Util qw(refaddr);
 
 =head1 NAME
 
@@ -131,19 +130,20 @@ sub prime {
 
 	return unless($args{'object'} && $args{'message'});
 
-	my $object = $args{'object'} . '->' . $args{'message'};
-	if(my $a = $args{arg}) {
-		$object .= "($a)"
-	}
+	# FIXME: Assumes arg is simple and stringable,
+	#	should use Storable::freeze
 
-	if($self->{values} && $self->{values}->{$object} && $self->{values}->{$object}->{status}) {
+	my $key = join ':',
+		refaddr($args{object}), $args{message}, defined($args{arg}) ? $args{arg} : '';
+
+	if($self->{values} && $self->{values}->{$key} && $self->{values}->{$key}->{status}) {
 		my @call_details = caller(0);
 		die 'Attempt to prime twice at ', $call_details[2], ' of ', $call_details[1];
 	}
 
-	$self->{values}->{$object}->{status} = 'running';
+	$self->{values}->{$key}->{status} = 'running';
 
-	$self->{values}->{$object}->{thread} = threads->create(sub {
+	$self->{values}->{$key}->{thread} = threads->create(sub {
 		my ($o, $m, $a, $wantarray) = @_;
 		if($wantarray) {
 			my @rc;
@@ -160,7 +160,7 @@ sub prime {
 		return eval '$o->$m()';
 	}, $args{object}, $args{message}, $args{arg}, wantarray);
 
-	# $self->{values}->{$object}->{thread} = async {
+	# $self->{values}->{$key}->{thread} = async {
 		# my $o = $args{object};
 		# my $m = $args{message};
 		# if(my $a = $args{arg}) {
@@ -201,16 +201,14 @@ sub get {
 
 	return unless($args{'object'} && $args{'message'});
 
-	my $object = $args{'object'} . '->' . $args{'message'};
-	if(my $a = $args{arg}) {
-		$object .= "($a)"
-	}
+	my $key = join ':',
+		refaddr($args{object}), $args{message}, defined($args{arg}) ? $args{arg} : '';
 
-	if(!defined($self->{values}->{$object}->{status})) {
+	if(!defined($self->{values}->{$key}->{status})) {
 		# my @call_details = caller(0);
 		# die 'Need to prime before getting at line ', $call_details[2], ' of ', $call_details[1];
 
-		$self->{values}->{$object}->{status} = 'complete';
+		$self->{values}->{$key}->{status} = 'complete';
 		my ($o, $m, $a) = ($args{object}, $args{message}, $args{arg});
 		if(wantarray) {
 			my @rc;
@@ -219,7 +217,7 @@ sub get {
 			} else {
 				@rc = eval '$o->$m()';
 			}
-			push @{$self->{values}->{$object}->{value}}, @rc;
+			push @{$self->{values}->{$key}->{value}}, @rc;
 			return @rc;
 		} else {
 			my $rc;
@@ -228,30 +226,30 @@ sub get {
 			} else {
 				$rc = eval '$o->$m()';
 			}
-			return $self->{values}->{$object}->{value} = $rc;
+			return $self->{values}->{$key}->{value} = $rc;
 		}
 	}
-	if($self->{values}->{$object}->{status} eq 'complete') {
-		my $value = $self->{values}->{$object}->{value};
+	if($self->{values}->{$key}->{status} eq 'complete') {
+		my $value = $self->{values}->{$key}->{value};
 		if(wantarray && (ref($value) eq 'ARRAY')) {
 			my @rc = @{$value};
 			return @rc;
 		}
 		return $value;
 	}
-	if($self->{values}->{$object}->{status} eq 'running') {
-		$self->{values}->{$object}->{status} = 'complete';
+	if($self->{values}->{$key}->{status} eq 'running') {
+		$self->{values}->{$key}->{status} = 'complete';
 		if(wantarray) {
-			my @rc = @{$self->{values}->{$object}->{thread}->join()};
-			delete $self->{values}->{$object}->{thread};
-			push @{$self->{values}->{$object}->{value}}, @rc;
+			my @rc = @{$self->{values}->{$key}->{thread}->join()};
+			delete $self->{values}->{$key}->{thread};
+			push @{$self->{values}->{$key}->{value}}, @rc;
 			return @rc;
 		}
-		my $rc = $self->{values}->{$object}->{thread}->join();
-		delete $self->{values}->{$object}->{thread};
-		return $self->{values}->{$object}->{value} = $rc;
+		my $rc = $self->{values}->{$key}->{thread}->join();
+		delete $self->{values}->{$key}->{thread};
+		return $self->{values}->{$key}->{value} = $rc;
 	}
-	die 'Unknown status: ', $self->{values}->{$object}->{status};
+	die 'Unknown status: ', $self->{values}->{$key}->{status};
 }
 
 sub DESTROY {
@@ -280,7 +278,7 @@ sub DESTROY {
 
 =head1 AUTHOR
 
-Nigel Horne, C<< <njh at bandsman.co.uk> >>
+Nigel Horne, C<< <njh at nigelhorne.com> >>
 
 =head1 BUGS
 
@@ -351,7 +349,7 @@ L<http://deps.cpantesters.org/?module=Data::Fetch>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2010-2024 Nigel Horne.
+Copyright 2010-2025 Nigel Horne.
 
 This program is released under the following licence: GPL2
 

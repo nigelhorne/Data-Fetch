@@ -41,6 +41,7 @@ WriteMakefile(
 	'Test::CleanNamespaces' => 0,
 	# 'Test::Kwalitee' => 0,
     }, PREREQ_PM => {
+	'Scalar::Util' => 0,
 	'threads' => 0,
     }, dist => $dist,
     clean		=> { FILES => 'Data-Fetch-*' },

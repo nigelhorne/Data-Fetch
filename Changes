@@ -2,6 +2,7 @@ Revision history for Data::Fetch
 
 0.07
 	Clearer documentation
+	Improved key to reduce chances of name clashes
 
 0.06	Tue Nov 24 10:33:23 EST 2020
 	Support arrays
