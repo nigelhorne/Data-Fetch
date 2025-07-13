@@ -91,36 +91,40 @@ sub new {
     $fetcher->prime(
         object  => $obj,
         message => 'method_name',
-        arg     => $arg         # Optional
+        arg     => $args_ref    # Optional
     );
 
-Primes a method call to be executed in the background.
-This prepares the value for later retrieval via C<get>.
+Starts a background thread that will call the given method on the object.
 
-Arguments:
+Takes the following parameters:
 
 =over 4
 
 =item * object
 
-The object to call the method on.
+The object on which the method will be invoked.
 
 =item * message
 
-The method name to invoke (a string).
+The name of the method to call.
 
 =item * arg
 
-Optional.
-A single scalar argument passed to the method.
-If multiple values are needed, use an arrayref or hashref and unpack inside your method.
+(Optional) The arguments to pass to the method. This must be:
+
+- A scalar
+- An arrayref of positional arguments
+- A hashref of named arguments
+
+The arguments are passed to the method using Perl's standard C<@_> behavior:
+
+    $obj->$method(@$args)      # if arg is an arrayref
+    $obj->$method(%$args)      # if arg is a hashref
+    $obj->$method($arg)        # otherwise
 
 =back
 
-C<prime> should be called in the same context (scalar or list) as C<get>,
-or else results may be inconsistent or incorrect.
-
-Dies if the same method is primed twice on the same object.
+If called in list context, the method result will be stored and returned in list context when retrieved via C<get()>.
 
 =cut
 
@@ -145,6 +149,13 @@ sub prime {
 
 	$self->{values}->{$key}->{thread} = threads->create(sub {
 		my ($o, $m, $a, $wantarray) = @_;
+		if((ref($a) eq 'ARRAY') || (ref($a) eq 'HASH')) {
+			if($wantarray) {
+				my @rc = eval '$o->$m(@{$a})';
+				return \@rc;
+			}
+			return eval '$o->$m(@{$a})';
+		}
 		if($wantarray) {
 			my @rc;
 			if($a) {

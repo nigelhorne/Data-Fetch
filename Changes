@@ -4,6 +4,7 @@ Revision history for Data::Fetch
 	Clearer documentation
 	Improved key to reduce chances of name clashes
 	Fix thread completion race around the status value
+	prime(): Allow ref to HASH or ARRAY to be passed in
 
 0.06	Tue Nov 24 10:33:23 EST 2020
 	Support arrays
