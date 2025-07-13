@@ -204,7 +204,9 @@ sub get {
 	my $key = join ':',
 		refaddr($args{object}), $args{message}, defined($args{arg}) ? $args{arg} : '';
 
-	if(!defined($self->{values}->{$key}->{status})) {
+	my $status = $self->{values}->{$key}->{status};
+
+	if(!defined($status)) {
 		# my @call_details = caller(0);
 		# die 'Need to prime before getting at line ', $call_details[2], ' of ', $call_details[1];
 
@@ -229,7 +231,8 @@ sub get {
 			return $self->{values}->{$key}->{value} = $rc;
 		}
 	}
-	if($self->{values}->{$key}->{status} eq 'complete') {
+
+	if($status eq 'complete') {
 		my $value = $self->{values}->{$key}->{value};
 		if(wantarray && (ref($value) eq 'ARRAY')) {
 			my @rc = @{$value};
@@ -237,8 +240,9 @@ sub get {
 		}
 		return $value;
 	}
-	if($self->{values}->{$key}->{status} eq 'running') {
+	if($status eq 'running') {
 		$self->{values}->{$key}->{status} = 'complete';
+		$self->{values}->{$key}->{joined} = 1;	# Mark as joined
 		if(wantarray) {
 			my @rc = @{$self->{values}->{$key}->{thread}->join()};
 			delete $self->{values}->{$key}->{thread};
@@ -249,30 +253,47 @@ sub get {
 		delete $self->{values}->{$key}->{thread};
 		return $self->{values}->{$key}->{value} = $rc;
 	}
-	die 'Unknown status: ', $self->{values}->{$key}->{status};
+	die "Unknown status: $status";
 }
 
-sub DESTROY {
+sub DESTROY
+{
 	if(defined($^V) && ($^V ge 'v5.14.0')) {
-		return if ${^GLOBAL_PHASE} eq 'DESTRUCT';	# >= 5.14.0 only
+		return if ${^GLOBAL_PHASE} eq 'DESTRUCT';  # >= 5.14.0 only
 	}
-	my $self = shift;
 
+	my $self = shift;
 	return unless($self->{values});
 
-	foreach my $v(values %{$self->{values}}) {
-		if($v->{thread}) {
-			if($v->{thread}->is_running()) {
-				$v->{thread}->detach();
-			} else {
-				# FIXME: join the thread.
-				# However, that's not a good idea in a DESTROY
-				#	routine
-				warn 'Thread ', $v->{thread}->tid(), ' primed but not used';
-			}
+	foreach my $v (values %{$self->{values}}) {
+		next unless $v->{thread};
+
+		my $thread = $v->{thread};
+
+		if($v->{joined}) {
+			# Thread already joined, just clean up
 			delete $v->{thread};
 			delete $v->{value};
+			next;
 		}
+
+		if ($thread->is_running) {
+			warn 'Thread ', $thread->tid(), ' primed but not used; detaching';
+			$thread->detach;
+		} else {
+		# } elsif ($thread->is_joinable && ($v->{'status'} ne 'complete')) {
+			# FIXME: join the thread.
+			# However, that's not a good idea in a DESTROY
+			#       routine
+			# The thread is done, so join it and store result (if not already done)
+			# my $result = $thread->join();
+			# $v->{value} = $result unless exists $v->{value};
+			# $v->{status} = 'complete';
+			warn 'Thread ', $thread->tid(), ' primed but not used';
+		}
+
+		delete $v->{thread};  # Always clean up
+		delete $v->{value};
 	}
 }
 
