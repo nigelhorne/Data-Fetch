@@ -352,8 +352,6 @@ same address to the new object as the old object.
     $data = Class::Simple->new();	# Possibly the address of $data isn't changed
     $fetch->prime(object => $data, message => 'get');	# <<<< This could produce the error
 
-=head1 SEE ALSO
-
 =head1 SUPPORT
 
 This module is provided as-is without any warranty.
@@ -362,9 +360,11 @@ You can find documentation for this module with the perldoc command.
 
     perldoc Data::Fetch
 
-You can also look for information at:
+=head1 SEE ALSO
 
 =over 4
+
+=item * L<Data::Lazy> - defered variables
 
 =item * MetaCPAN
 
